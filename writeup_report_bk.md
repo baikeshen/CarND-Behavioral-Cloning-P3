@@ -32,7 +32,7 @@ The visualizations I used to create this report could be found at [Visualization
 #### 2. Submission includes functional code Using the Udacity provided simulator and my drive.py file; the car can be driven autonomously around the track by executing
 
 ```
-Python drive.py model.h5
+Python drive.py model_nvidia.h5
 ```
 
 #### 3. Submission code is usable and readable
@@ -46,6 +46,7 @@ The model.py file contains the code for training and saving the convolution neur
 My initial approach was to use [LeNet](http://yann.lecun.com/exdb/lenet/), but it was hard to have the car inside the street with three epochs (this model could be found [here](clone.py#L81-L94)). After this, I decided to try the [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) model, and the car drove the complete first track after just three training epochs (this model could be found [here](model.py#L108-L123)).
 
 A model summary is as follows:
+
 
 ```
 Layer (type)                     Output Shape          Param #     Connected to                     
@@ -83,12 +84,13 @@ Non-trainable params: 0
 
 #### 2. Attempts to reduce overfitting in the model
 
-I decided not to modify the model by applying regularization techniques like [Dropout](https://en.wikipedia.org/wiki/Dropout_(neural_networks)) or [Max pooling](https://en.wikipedia.org/wiki/Convolutional_neural_network#Max_pooling_shape). Instead, I decided to keep the training epochs low: only three epochs.
-In addition to that, I split my sample data into training and validation data. Using 80% as training and 20% as validation. This can be seen at [this part of the code](model.py#L131-L134).
+Neither regularization techniques like [Dropout](https://en.wikipedia.org/wiki/Dropout_(neural_networks)) or [Max pooling](https://en.wikipedia.org/wiki/Convolutional_neural_network#Max_pooling_shape) has been applied. Instead, I decided to keep the training epochs low: only three epochs.
+
+In addition to that, I split my sample data into training and validation data. Using 80% as training and 20% as validation. This can be seen at [this part of the code](model_nvidia.py#L121).
 
 #### 3. Model parameter tuning
 
-The model used an Adam optimizer, so the learning rate was not tuned manually ([model.py line 146](model.py#L146)).
+The model used an Adam optimizer, so the learning rate was not tuned manually ([model_nvidia.py line 146](model.py#L120)).
 
 #### 4. Appropriate training data
 
@@ -100,7 +102,14 @@ For details about how I created the training data, see the next section.
 
 #### 1. Solution Design Approach
 
-My first step was to try the LeNet](http://yann.lecun.com/exdb/lenet/) model with three epochs and the training data provided by Udacity. On the first track, the car went straight to the lake. I needed to do some pre-processing. A [new](model.py#L104) `Lambda` layer was introduced to normalize the input images to zero means. This step allows the car to move a bit further, but it didn't get to the first turn. Another `Cropping` [layer](model.py#L105) was introduced, and the first turn was almost there, but not quite.
+My first step was to try the LeNet](http://yann.lecun.com/exdb/lenet/) model with three epochs and the training data provided by Udacity. The algorithem is shown as below:
+
+```
+
+
+```
+
+On the first track, the car went straight to the lake. I needed to do some pre-processing. A [new](model.py#L104) `Lambda` layer was introduced to normalize the input images to zero means. This step allows the car to move a bit further, but it didn't get to the first turn. Another `Cropping` [layer](model.py#L105) was introduced, and the first turn was almost there, but not quite.
 
 The second step was to use a more powerfull model: [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) The only modification was to add a new layer at the end to have a single output as it was required. This time the car did its first complete track, but there was a place in the track where it passes over the "dashed" line. More data was needed. Augmented the data by adding the same image flipped with a negative angle([lines 85 - 87](model.py#L85-L87)). In addition to that, the left and right camera images where introduced with a correction factor on the angle to help the car go back to the lane([lines 50 - 63](model.py#L50-L63)). After this process, the car continues to have the same problem with the same "dashed" line. I needed more data, but it was a good beginning.
 
