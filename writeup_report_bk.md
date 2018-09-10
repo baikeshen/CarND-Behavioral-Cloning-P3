@@ -22,7 +22,7 @@ My project includes the following files:
 - **model.py** : Containing the script to create and train the model
 - **drive.py** : For driving the car in autonomous mode in the simulator 
 - **model.h5** : Containing a trained convolution neural network.
-- **writeup_report.md** : Summarizing the results
+- **writeup_report_bk.md** : Summarizing the results
 
 Node:
 
@@ -43,7 +43,7 @@ The model.py file contains the code for training and saving the convolution neur
 
 #### 1. An appropriate model architecture has been employed
 
-My initial approach was to use [LeNet](http://yann.lecun.com/exdb/lenet/), but it was hard to have the car inside the road with only three epochs (this model could be found [here](model_LeNet.py.py)). 
+My initial approach was to use [LeNet](http://yann.lecun.com/exdb/lenet/), but it was hard to have the car inside the road with only three epochs (this model could be found [here](model_LeNet.py)). 
 
 After this,  [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) model was decided to be selected, and the car drove the complete first track after just three training epochs (this model could be found [here](model.py)).
 
