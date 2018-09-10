@@ -20,7 +20,7 @@ Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/4
 My project includes the following files:
 
 - **model.py** : Containing the script to create and train the model
-- **drive.py** : For driving the car in autonomous mode in the simulator (This is provided [Udacity](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/drive.py), my only modification was to increase the car speed on line 47 from 9 to 15)
+- **drive.py** : For driving the car in autonomous mode in the simulator 
 - **model.h5** : Containing a trained convolution neural network.
 - **writeup_report.md** : Summarizing the results
 
@@ -43,7 +43,42 @@ The model.py file contains the code for training and saving the convolution neur
 
 #### 1. An appropriate model architecture has been employed
 
-My initial approach was to use [LeNet](http://yann.lecun.com/exdb/lenet/), but it was hard to have the car inside the street with three epochs (this model could be found [here](clone.py#L81-L94)). After this, I decided to try the [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) model, and the car drove the complete first track after just three training epochs (this model could be found [here](model.py#L108-L123)).
+My initial approach was to use [LeNet](http://yann.lecun.com/exdb/lenet/), but it was hard to have the car inside the road with only three epochs (this model could be found [here](model_LeNet.py.py)). 
+
+```
+# My LeNet model architecture
+model = Sequential()
+
+model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=processed_image_shape))
+
+# model.add(Cropping2D(cropping=((50,20), (0,0))))
+
+"""
+Creates a LeNet model.
+"""
+
+model.add(Convolution2D(6,5,5,activation='relu'))
+
+model.add(MaxPooling2D())
+
+model.add(Convolution2D(6,5,5,activation='relu'))
+
+model.add(MaxPooling2D())
+
+model.add(Flatten())
+
+model.add(Dense(120))
+model.add(Dense(84))
+model.add(Dense(1))
+
+
+model.compile(loss='mse', optimizer='adam')
+model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch = 5)
+
+model.save('model_LeNet.h5')
+```
+
+After this, I decided to try the [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) model, and the car drove the complete first track after just three training epochs (this model could be found [here](model.py#L108-L123)).
 
 A model summary is as follows:
 
