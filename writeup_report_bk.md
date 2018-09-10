@@ -27,12 +27,12 @@ My project includes the following files:
 Node:
 
 On my first iteration, I tried [LeNet](http://yann.lecun.com/exdb/lenet/) model and [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) model. This experiments could be found at [clone.py](clone.py).
-The visualizations I used to create this report could be found at [Visualizations.ipynb](Visualizations.ipynb). 
+The visualizations I used to create this report could be found at [BK_Visualizations.ipynb](BK_Visualizations.ipynb). 
 
 #### 2. Submission includes functional code Using the Udacity provided simulator and my drive.py file; the car can be driven autonomously around the track by executing
 
 ```
-Python drive.py model_nvidia.h5
+Python drive.py model.h5
 ```
 
 #### 3. Submission code is usable and readable
@@ -46,44 +46,75 @@ The model.py file contains the code for training and saving the convolution neur
 My initial approach was to use [LeNet](http://yann.lecun.com/exdb/lenet/), but it was hard to have the car inside the road with only three epochs (this model could be found [here](model_LeNet.py.py)). 
 
 ```
-# My LeNet model architecture
-model = Sequential()
-
-model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=processed_image_shape))
-
-# model.add(Cropping2D(cropping=((50,20), (0,0))))
-
-"""
-Creates a LeNet model.
-"""
-
-model.add(Convolution2D(6,5,5,activation='relu'))
-
-model.add(MaxPooling2D())
-
-model.add(Convolution2D(6,5,5,activation='relu'))
-
-model.add(MaxPooling2D())
-
-model.add(Flatten())
-
-model.add(Dense(120))
-model.add(Dense(84))
-model.add(Dense(1))
-
-
-model.compile(loss='mse', optimizer='adam')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch = 5)
-
-model.save('model_LeNet.h5')
+____________________________________________________________________________________________________
+Layer (type)                     Output Shape          Param #     Connected to                     
+====================================================================================================
+lambda_1 (Lambda)                (None, 80, 320, 3)    0           lambda_input_3[0][0]             
+____________________________________________________________________________________________________
+convolution2d_1 (Convolution2D)  (None, 76, 316, 6)    456         lambda_1[0][0]                   
+____________________________________________________________________________________________________
+maxpooling2d_1 (MaxPooling2D)    (None, 38, 158, 6)    0           convolution2d_1[0][0]            
+____________________________________________________________________________________________________
+convolution2d_2 (Convolution2D)  (None, 34, 154, 6)    906         maxpooling2d_1[0][0]             
+____________________________________________________________________________________________________
+maxpooling2d_2 (MaxPooling2D)    (None, 17, 77, 6)     0           convolution2d_2[0][0]            
+____________________________________________________________________________________________________
+flatten_1 (Flatten)              (None, 7854)          0           maxpooling2d_2[0][0]             
+____________________________________________________________________________________________________
+dense_1 (Dense)                  (None, 120)           942600      flatten_1[0][0]                  
+____________________________________________________________________________________________________
+dense_2 (Dense)                  (None, 84)            10164       dense_1[0][0]                    
+____________________________________________________________________________________________________
+dense_3 (Dense)                  (None, 1)             85          dense_2[0][0]                    
+====================================================================================================
+Total params: 954,211
+Trainable params: 954,211
+Non-trainable params: 0
+____________________________________________________________________________________________________
 ```
 
-After this, I decided to try the [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) model, and the car drove the complete first track after just three training epochs (this model could be found [here](model.py#L108-L123)).
+
+After this,  [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) model was decided to be selected, and the car drove the complete first track after just three training epochs (this model could be found [here](model_nvidia.py)).
+
+```
+# My nVidia model architecture
+model = Sequential()
+
+model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=processed_image_shape)) #(160, 320, 3)
+
+model.add(Convolution2D(24, 5, 5, subsample=(2, 2), activation="relu"))
+#model.add(MaxPooling2D())
+#model.add(Dropout(0.25))
+
+model.add(Convolution2D(36, 5, 5, subsample=(2, 2), activation="relu"))
+#model.add(MaxPooling2D())
+
+model.add(Convolution2D(48, 5, 5, subsample=(2, 2), activation="relu"))
+#model.add(MaxPooling2D())
+
+model.add(Convolution2D(64, 3, 3, activation="relu"))
+#model.add(MaxPooling2D())
+
+model.add(Convolution2D(64, 3, 3, activation="relu"))
+#model.add(MaxPooling2D())
+
+model.add(Flatten())
+model.add(Dense(100))  #100
+#model.add(Dropout(0.20))
+model.add(Dense(50))   # 50
+model.add(Dense(10))   # 10
+model.add(Dense(1))
+
+model.compile(loss='mse', optimizer='adam')
+history_object = model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch = 3)
+
+model.save('model_nvidia.h5')
+```
 
 A model summary is as follows:
 
-
 ```
+____________________________________________________________________________________________________
 Layer (type)                     Output Shape          Param #     Connected to                     
 ====================================================================================================
 lambda_1 (Lambda)                (None, 160, 320, 3)   0           lambda_input_2[0][0]             
@@ -113,13 +144,12 @@ dense_4 (Dense)                  (None, 1)             11          dense_3[0][0]
 Total params: 981,819
 Trainable params: 981,819
 Non-trainable params: 0
+____________________________________________________________________________________________________
 ```
-
-(More details about this bellow.)
 
 #### 2. Attempts to reduce overfitting in the model
 
-Neither regularization techniques like [Dropout](https://en.wikipedia.org/wiki/Dropout_(neural_networks)) or [Max pooling](https://en.wikipedia.org/wiki/Convolutional_neural_network#Max_pooling_shape) has been applied. Instead, I decided to keep the training epochs low: only three epochs.
+Neither regularization techniques like [Dropout](https://en.wikipedia.org/wiki/Dropout_(neural_networks)) or [Max pooling](https://en.wikipedia.org/wiki/Convolutional_neural_network#Max_pooling_shape) has been applied. Instead, the target is to keep the training epochs low: only three epochs.
 
 In addition to that, I split my sample data into training and validation data. Using 80% as training and 20% as validation. This can be seen at [this part of the code](model_nvidia.py#L121).
 
