@@ -27,7 +27,7 @@ My project includes the following files:
 Node:
 
 On my first iteration, I tried [LeNet](http://yann.lecun.com/exdb/lenet/) model and [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) model. This experiments could be found at [clone.py](clone.py).
-The visualizations I used to create this report could be found at [Visualizations.ipynb](Visualizations.ipynb).
+The visualizations I used to create this report could be found at [Visualizations.ipynb](Visualizations.ipynb). 
 
 #### 2. Submission includes functional code Using the Udacity provided simulator and my drive.py file; the car can be driven autonomously around the track by executing
 
@@ -117,7 +117,7 @@ The second step was to use a more powerfull model: [nVidia Autonomous Car Group]
 
 The final model architecture is shown in the following image:
 
-![Final model architecture](images/nVidea_data.png)
+![Final model architecture](examples/Nvidia_cnn-architecture.png)
 
 #### 3. Creation of the Training Set & Training Process
 
