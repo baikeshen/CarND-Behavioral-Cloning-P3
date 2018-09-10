@@ -87,7 +87,11 @@ ________________________________________________________________________________
 
 Neither regularization techniques like Dropout or Max_pooling has been applied. Instead, the target is to keep the training epochs low: only three epochs.
 
-In addition to that, I split my sample data into training and validation data. Using 80% as training and 20% as validation. This can be seen at [this part of the code](model.py#L121).
+In addition to that, I split my sample data into training and validation data. Using 80% as training and 20% as validation. This can be seen at [this part of the code](model.py) as below.
+
+```
+history_object = model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch = 3)
+```
 
 #### 3. Model parameter tuning
 
