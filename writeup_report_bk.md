@@ -200,7 +200,7 @@ Epoch 3/3
 38572/38572 [==============================] - 905s - loss: 0.0121 - val_loss: 0.0186
 ```
 
-After this training, the car was driving down the road all the time on the [first](track1_run.mp4).
+After this training, the car was driving down the road all the time on the [first track](track1_run.mp4).
 
 ### Potential Improvement
 
