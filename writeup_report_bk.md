@@ -133,7 +133,7 @@ Non-trainable params: 0
 ____________________________________________________________________________________________________
 ```
 
-On the first track, the car went straight to the lake. Some pre-processing had to be done. A Lambda layer wasintroduced to normalize the input images to zero meman. This step made some progress which allowed the car move a little bit further. However, it was failure to make the first turn. I still had the similar problem even after appalying cropping layer.
+On the first track, the car went straight to the lake. Some pre-processing had to be done. A Lambda layer was introduced to normalize the input images to zero meman. This step made some progress which allowed the car move a little bit further. However, it was failure to make the first turn. I still had the similar problem even after appalying cropping layer.
 
 The second step was to use a more powerfull model: [nVidia Autonomous Car Group](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/) The only modification was to add a new layer at the end to have a single output as it was required. This time the car did its first complete track, but there was a place in the track where it passes over the "dashed" line.
 
